@@ -6,7 +6,6 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
-import RenderRouterView from "./components/RenderRouterView.vue";
 
 Vue.use(Router);
 
@@ -16,7 +15,7 @@ export default new Router({
   routes: [
     {
       path: "/user",
-      component: RenderRouterView,
+      component: { render: h => h("router-view") },
       children: [
         {
           path: "/user/login",
