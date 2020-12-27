@@ -128,7 +128,9 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  NProgress.start(); // 跳转进度条显示
+  if (to.path !== from.path) {
+    NProgress.start(); // 跳转进度条显示
+  }
   next(); // 此处必须调用next()才能完成跳转
 });
 router.afterEach(() => {

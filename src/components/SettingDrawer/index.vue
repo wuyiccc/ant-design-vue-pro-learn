@@ -13,9 +13,28 @@
           <a-icon :type="visible ? 'close' : 'setting'"></a-icon>
         </div>
       </template>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
+      <div>
+        <template>
+          <div>
+            <h1>整体风格定制</h1>
+            <a-radio-group
+              @change="e => handleSettingChange('navTheme', e.target.value)"
+              :value="$route.query.navTheme || 'dark'"
+            >
+              <a-radio value="dark">黑色</a-radio>
+              <a-radio value="light">白色</a-radio>
+            </a-radio-group>
+            <h1>导航模式</h1>
+            <a-radio-group
+              @change="e => handleSettingChange('navLayout', e.target.value)"
+              :value="$route.query.navLayout || 'left'"
+            >
+              <a-radio value="left">左侧</a-radio>
+              <a-radio value="top">顶部</a-radio>
+            </a-radio-group>
+          </div>
+        </template>
+      </div>
     </a-drawer>
   </div>
 </template>
@@ -33,6 +52,10 @@ export default {
     },
     onClose() {
       this.visible = false;
+    },
+    handleSettingChange(type, value) {
+      // 将配置同步到路由的信息中，方便在BasicLayout中进行获取
+      this.$router.push({ query: { ...this.$route.query, [type]: value } });
     }
   }
 };

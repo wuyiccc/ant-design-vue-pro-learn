@@ -1,10 +1,20 @@
 <!--核心页面布局-->
 <template>
   <div>
-    <a-layout id="components-layout-demo-side" style="min-height: 100vh">
+    <a-layout
+      :class="[`nav-theme-${navTheme}`, `nav-layout-${navLayout}`]"
+      id="components-layout-demo-side"
+      style="min-height: 100vh"
+    >
       <!--菜单栏-->
-      <a-layout-sider :trigger="null" v-model="collapsed" collapsible>
-        <div class="logo" />
+      <a-layout-sider
+        v-if="navLayout === 'left'"
+        :theme="navTheme"
+        :trigger="null"
+        v-model="collapsed"
+        collapsible
+      >
+        <div class="logo">Ant Design Vue Pro Learn</div>
         <SiderMenu></SiderMenu>
       </a-layout-sider>
       <!--核心布局-->
@@ -25,6 +35,7 @@
         </a-layout-footer>
       </a-layout>
     </a-layout>
+    <!--设置栏-->
     <SettingDrawer></SettingDrawer>
   </div>
 </template>
@@ -47,6 +58,14 @@ export default {
     Footer,
     SiderMenu,
     SettingDrawer
+  },
+  computed: {
+    navTheme() {
+      return this.$route.query.navTheme || "dark";
+    },
+    navLayout() {
+      return this.$route.query.navLayout || "left";
+    }
   }
 };
 </script>
@@ -59,5 +78,14 @@ export default {
 }
 .trigger:hover {
   background: #eeeeee;
+}
+.logo {
+  height: 64px;
+  line-height: 64px;
+  text-align: center;
+  overflow: hidden;
+}
+.nav-theme-dark >>> .logo {
+  color: #ffffff;
 }
 </style>
