@@ -1,15 +1,21 @@
 <!--函数式组件, 只接收prop， 没有响应式数据，没有this-->
 <template functional>
-  <a-sub-menu :key="props.menuInfo.key">
+  <a-sub-menu :key="props.menuInfo.path">
+    <!--根菜单-->
     <span slot="title">
-      <a-icon type="mail" /><span>{{ props.menuInfo.title }}</span>
+      <a-icon
+        v-if="props.menuInfo.meta.icon"
+        :type="props.menuInfo.meta.icon"
+      />
+      <span>{{ props.menuInfo.meta.title }}</span>
     </span>
+    <!--子菜单-->
     <template v-for="item in props.menuInfo.children">
-      <a-menu-item v-if="!item.children" :key="item.key">
-        <a-icon type="pie-chart" />
-        <span>{{ item.title }}</span>
+      <a-menu-item v-if="!item.children" :key="item.path">
+        <a-icon v-if="item.meta.icon" :type="item.meta.icon" />
+        <span>{{ item.meta.title }}</span>
       </a-menu-item>
-      <sub-menu v-else :key="item.key" :menu-info="item" />
+      <sub-menu v-else :key="item.path" :menu-info="item" />
     </template>
   </a-sub-menu>
 </template>
