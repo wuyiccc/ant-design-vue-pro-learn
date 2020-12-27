@@ -41,6 +41,7 @@ export default {
       this.chartOption.series[0].data = this.chartOption.series[0].data.map(
         () => random(100)
       );
+      this.chartOption = { ...this.chartOption };
     }, 3000);
   },
   beforeDestroy() {

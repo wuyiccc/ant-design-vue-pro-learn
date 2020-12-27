@@ -15,16 +15,17 @@ export default {
     }
   },
   watch: {
-    // option(val) {
-    //   this.chart.setOption(val);
-    // }
-    // 深度监听val的变化
-    option: {
-      handler(val) {
-        this.chart.setOption(val);
-      },
-      deep: true
+    // 浅层监听option的变化，但是当option内部值变化时，在外部组件重新给option赋予一个新对象
+    option(val) {
+      this.chart.setOption(val);
     }
+    // 深度监听val的变化
+    // option: {
+    //   handler(val) {
+    //     this.chart.setOption(val);
+    //   },
+    //   deep: true
+    // }
   },
 
   created() {
