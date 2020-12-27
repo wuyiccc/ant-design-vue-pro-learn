@@ -1,17 +1,24 @@
 <template>
-  <div ref="chartDom" style="height: 200px"></div>
+  <div ref="chartDom" style="height: 400px"></div>
 </template>
 
 <script>
 import echarts from "echarts";
+import { addListener, removeListener } from "resize-detector";
+import debounce from "lodash/debounce";
 export default {
   name: "Chart",
+  created() {
+    // 对resize方法的调用进行过滤处理，防止调用频率过高
+    this.resize = debounce(this.resize, 300);
+  },
   mounted() {
     // 基于准备好的dom，初始化echarts实例
-    var myChart = echarts.init(this.$refs.chartDom);
+    this.chart = echarts.init(this.$refs.chartDom);
+    addListener(this.$refs.chartDom, this.resize);
 
     // 指定图表的配置项和数据
-    var option = {
+    this.chart.setOption({
       title: {
         text: "ECharts 入门示例"
       },
@@ -30,10 +37,19 @@ export default {
           data: [5, 20, 36, 10, 10, 20]
         }
       ]
-    };
-
-    // 使用刚指定的配置项和数据显示图表。
-    myChart.setOption(option);
+    });
+  },
+  beforeDestroy() {
+    removeListener(this.$refs.chartDom, this.resize);
+    // 销毁实例, 防止内存泄漏
+    this.chart.dispose();
+    this.chart = null;
+  },
+  methods: {
+    resize() {
+      console.log("####resize");
+      this.chart.resize();
+    }
   }
 };
 </script>
