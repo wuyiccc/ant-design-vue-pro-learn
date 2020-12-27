@@ -5,9 +5,9 @@
  */
 
 export function getCurrentAuthority() {
-  return ["user"];
+  return ["admin"];
 }
-
+// 检查当前登录用户current是否在指定的authority权限数组里面
 export function check(authority) {
   const current = getCurrentAuthority();
   return current.some(item => authority.includes(item));

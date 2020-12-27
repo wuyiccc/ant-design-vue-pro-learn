@@ -36,8 +36,10 @@
         </a-layout-footer>
       </a-layout>
     </a-layout>
-    <!--设置栏-->
-    <SettingDrawer></SettingDrawer>
+    <!--设置栏: 渲染时会通过Authorized的render方法进行判断是否渲染该组件-->
+    <Authorized :authority="['admin']">
+      <SettingDrawer></SettingDrawer>
+    </Authorized>
   </div>
 </template>
 
