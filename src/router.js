@@ -6,10 +6,12 @@
 import Vue from "vue";
 import Router from "vue-router";
 import NotFound from "./views/404";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
@@ -124,3 +126,13 @@ export default new Router({
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  NProgress.start(); // 跳转进度条显示
+  next(); // 此处必须调用next()才能完成跳转
+});
+router.afterEach(() => {
+  NProgress.done(); // 完成显示
+});
+
+export default router;
