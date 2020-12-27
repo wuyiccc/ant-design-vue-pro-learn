@@ -1,15 +1,18 @@
 <template>
   <div style="width: 256px">
     <a-menu
-      :default-selected-keys="['1']"
-      :default-open-keys="['2']"
+      :selected-keys="selectedKeys"
+      :open-keys.sync="openKeys"
       mode="inline"
       :theme="theme"
-      :inline-collapsed="collapsed"
     >
       <template v-for="item in menuData">
         <!--如果没有子菜单-->
-        <a-menu-item v-if="!item.children" :key="item.path">
+        <a-menu-item
+          v-if="!item.children"
+          :key="item.path"
+          @click="$router.push({ path: item.path, query: $route.query })"
+        >
           <a-icon v-if="item.meta.icon" :type="item.meta.icon" />
           <span>{{ item.meta.title }}</span>
         </a-menu-item>
@@ -35,22 +38,42 @@ export default {
     SubMenu
   },
   data() {
+    this.selectedKeysMap = {};
+    this.openKeysMap = {};
     const menuData = this.getMenuData(this.$router.options.routes);
     return {
       collapsed: false,
-      list: [],
-      menuData
+      menuData,
+      selectedKeys: this.selectedKeysMap[this.$route.path],
+      openKeys: this.collapsed ? [] : this.openKeysMap[this.$route.path]
     };
   },
+  watch: {
+    "$route.path": function(val) {
+      this.selectedKeys = this.selectedKeysMap[val];
+      this.openKeys = this.collapsed ? [] : this.openKeysMap[val];
+    }
+  },
   methods: {
-    getMenuData(routes) {
+    getMenuData(routes = [], parentKeys = [], selectedKey) {
       const menuData = [];
       routes.forEach(item => {
         if (item.name && !item.hideInMenu) {
+          this.openKeysMap[item.path] = parentKeys;
+          this.selectedKeysMap[item.path] = [selectedKey || item.path];
           const newItem = { ...item };
           delete newItem.children;
           if (item.children && !item.hideChildrenInMenu) {
-            newItem.children = this.getMenuData(item.children);
+            newItem.children = this.getMenuData(item.children, [
+              ...parentKeys,
+              item.path
+            ]);
+          } else {
+            this.getMenuData(
+              item.children,
+              selectedKey ? parentKeys : [...parentKeys, item.path],
+              selectedKey || item.path
+            );
           }
           menuData.push(newItem);
         } else if (
@@ -58,6 +81,7 @@ export default {
           !item.hideChildrenInMenu &&
           item.children
         ) {
+          // 根路由组件没有名字，但是有children
           menuData.push(...this.getMenuData(item.children));
         }
       });
