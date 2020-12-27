@@ -1,10 +1,16 @@
 <template>
-  <div>分析页</div>
+  <div>
+    <Chart></Chart>
+  </div>
 </template>
 
 <script>
+import Chart from "../../components/Chart";
 export default {
-  name: "Analysis"
+  name: "Analysis",
+  components: {
+    Chart
+  }
 };
 </script>
 
