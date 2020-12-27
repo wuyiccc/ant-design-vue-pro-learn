@@ -3,7 +3,7 @@
   <div>
     <a-layout id="components-layout-demo-side" style="min-height: 100vh">
       <!--菜单栏-->
-      <a-layout-sider v-model="collapsed" collapsible>
+      <a-layout-sider :trigger="null" v-model="collapsed" collapsible>
         <div class="logo" />
         <SiderMenu></SiderMenu>
       </a-layout-sider>
