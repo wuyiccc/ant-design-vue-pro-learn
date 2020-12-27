@@ -13,9 +13,10 @@
         :trigger="null"
         v-model="collapsed"
         collapsible
+        width="256px"
       >
         <div class="logo">Ant Design Vue Pro Learn</div>
-        <SiderMenu></SiderMenu>
+        <SiderMenu :theme="navTheme"></SiderMenu>
       </a-layout-sider>
       <!--核心布局-->
       <a-layout>
