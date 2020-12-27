@@ -50,8 +50,11 @@ export default {
   },
   watch: {
     "$route.path": function(val) {
+      console.log("path:" + val);
       this.selectedKeys = this.selectedKeysMap[val];
+      console.log("selectedKeys:" + this.selectedKeys);
       this.openKeys = this.collapsed ? [] : this.openKeysMap[val];
+      console.log("openKeys:" + this.openKeys);
     }
   },
   methods: {
