@@ -1,5 +1,5 @@
 <template>
-  <div ref="chartDom" style="height: 400px"></div>
+  <div ref="chartDom"></div>
 </template>
 
 <script>
@@ -8,36 +8,33 @@ import { addListener, removeListener } from "resize-detector";
 import debounce from "lodash/debounce";
 export default {
   name: "Chart",
+  props: {
+    option: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  watch: {
+    // option(val) {
+    //   this.chart.setOption(val);
+    // }
+    // 深度监听val的变化
+    option: {
+      handler(val) {
+        this.chart.setOption(val);
+      },
+      deep: true
+    }
+  },
+
   created() {
     // 对resize方法的调用进行过滤处理，防止调用频率过高
     this.resize = debounce(this.resize, 300);
   },
   mounted() {
-    // 基于准备好的dom，初始化echarts实例
-    this.chart = echarts.init(this.$refs.chartDom);
+    // 在挂载的时候渲染组件并设置监听器
+    this.renderChart();
     addListener(this.$refs.chartDom, this.resize);
-
-    // 指定图表的配置项和数据
-    this.chart.setOption({
-      title: {
-        text: "ECharts 入门示例"
-      },
-      tooltip: {},
-      legend: {
-        data: ["销量"]
-      },
-      xAxis: {
-        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
-      },
-      yAxis: {},
-      series: [
-        {
-          name: "销量",
-          type: "bar",
-          data: [5, 20, 36, 10, 10, 20]
-        }
-      ]
-    });
   },
   beforeDestroy() {
     removeListener(this.$refs.chartDom, this.resize);
@@ -49,6 +46,11 @@ export default {
     resize() {
       console.log("####resize");
       this.chart.resize();
+    },
+    renderChart() {
+      // 基于准备好的dom，初始化echarts实例
+      this.chart = echarts.init(this.$refs.chartDom);
+      this.chart.setOption(this.option);
     }
   }
 };
