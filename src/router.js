@@ -6,8 +6,12 @@
 import Vue from "vue";
 import Router from "vue-router";
 import NotFound from "./views/404";
+import Forbidden from "./views/403";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
+import findLast from "lodash/findLast";
+import { check, isLogin } from "./utils/auth";
+import { notification } from "ant-design-vue";
 
 Vue.use(Router);
 
@@ -43,6 +47,7 @@ const router = new Router({
     // 核心页面路由
     {
       path: "/",
+      meta: { authority: ["user", "admin"] },
       component: () =>
         import(/* webpackChunkName: "layout" */ "./layouts/BasicLayout"),
       children: [
@@ -73,7 +78,7 @@ const router = new Router({
         {
           path: "/form",
           name: "form",
-          meta: { icon: "form", title: "表单" },
+          meta: { icon: "form", title: "表单", authority: ["admin"] },
           component: { render: h => h("router-view") },
           children: [
             {
@@ -125,6 +130,12 @@ const router = new Router({
         }
       ]
     },
+    {
+      path: "/403",
+      name: "403",
+      hideInMenu: true,
+      component: Forbidden
+    },
     // 错误页面
     {
       path: "*",
@@ -140,9 +151,32 @@ Router.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err);
 };
 
+// 路由守卫
 router.beforeEach((to, from, next) => {
   if (to.path !== from.path) {
     NProgress.start(); // 跳转进度条显示
+  }
+  console.log("####to.matched:");
+  console.log(to.matched);
+  const record = findLast(to.matched, record => record.meta.authority); // path数组从后向前，找到具有authority属性的路径
+  console.log("####record");
+  console.log(record);
+  if (record && !check(record.meta.authority)) {
+    if (!isLogin() && to.path !== "/user/login") {
+      next({
+        path: "/user/login"
+      });
+    } else if (isLogin()) {
+      notification.error({
+        message: "403",
+        description: "用户权限不足!"
+      });
+      next({
+        path: "/403"
+      });
+      // 因为这里不会指向afterEach，所以需要手动调用NProgress.done()
+      NProgress.done();
+    }
   }
   next(); // 此处必须调用next()才能完成跳转
 });

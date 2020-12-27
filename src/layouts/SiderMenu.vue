@@ -25,6 +25,7 @@
 
 <script>
 import SubMenu from "./SubMenu";
+import {check} from "../utils/auth";
 
 export default {
   name: "SiderMenu",
@@ -59,11 +60,22 @@ export default {
   },
   methods: {
     getMenuData(routes = [], parentKeys = [], selectedKey) {
+      console.log("execute getMenuData...");
       const menuData = [];
-      routes.forEach(item => {
+      for (let item of routes) {
         if (item.name && !item.hideInMenu) {
+
+          if (item.meta && item.meta.authority && !check(item.meta.authority)) {
+            break;
+          }
+
           this.openKeysMap[item.path] = parentKeys;
           this.selectedKeysMap[item.path] = [selectedKey || item.path];
+          console.log("selectedKey " + selectedKey);
+          console.log("item.path " + item.path);
+          console.log(
+            "selectedKeysMap[item.path] " + this.selectedKeysMap[item.path]
+          );
           const newItem = { ...item };
           delete newItem.children;
           if (item.children && !item.hideChildrenInMenu) {
@@ -87,7 +99,8 @@ export default {
           // 根路由组件没有名字，但是有children
           menuData.push(...this.getMenuData(item.children));
         }
-      });
+      }
+
       return menuData;
     }
   }
