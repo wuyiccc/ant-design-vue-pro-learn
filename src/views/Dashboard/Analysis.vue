@@ -46,12 +46,12 @@ export default {
   },
   mounted() {
     this.getChartData();
-    this.interval = setInterval(() => {
-      this.getChartData();
-    }, 3000);
+    // this.interval = setInterval(() => {
+    //   this.getChartData();
+    // }, 3000);
   },
   beforeDestroy() {
-    clearInterval(this.interval);
+    // clearInterval(this.interval);
   }
 };
 </script>
