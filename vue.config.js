@@ -20,7 +20,7 @@ module.exports = {
           if (req.headers.accept.indexOf("html") !== -1) {
             console.log("Skipping proxy for browser request.");
             return "/index.html";
-          } else {
+          } else if (process.env.MOCK !== "none"){ // 如果package.json中的 "serve:no-mock"配置设置为none，就不走mock环境
             console.log("### req path");
             console.log(req.path);
             const name = req.path
