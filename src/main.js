@@ -22,6 +22,12 @@ Vue.use(Auth);
 // 自定义的组件不能用use
 Vue.component("Authorized", Authorized);
 
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: "//at.alicdn.com/t/font_1154049_w87h4oeytph.js" // 在 iconfont.cn 上生成
+});
+
+Vue.component("IconFont", IconFont);
+
 new Vue({
   router,
   store,
