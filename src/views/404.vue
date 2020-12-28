@@ -1,19 +1,17 @@
 <template>
   <div style="text-align: center">
     <icon-font type="icon-icon-404" style="font-size: 100px"></icon-font>
-    <img :src="logo" alt="">
+    <Logo></Logo>
   </div>
 </template>
 
 <script>
-import logo from "@/assets/logo.png";
+import Logo from "@/assets/logo.svg";
 
 export default {
   name: "404",
-  data() {
-    return {
-      logo
-    };
+  components: {
+    Logo
   }
 };
 </script>
