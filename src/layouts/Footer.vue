@@ -1,6 +1,8 @@
 <!--核心页面页脚-->
 <template>
-  <div>Footer</div>
+  <div>
+    Ant Design Vue Pro Learn ©2020 Created by Wuyiccc
+  </div>
 </template>
 
 <script>
