@@ -87,10 +87,18 @@ export default {
     handleSubmit() {
       this.form.validateFields((err, values) => {
         if (!err) {
+          console.log("this.fieldA", this.fieldA);
           console.log(values);
+          Object.assign(this, values); // 将表单中的值同步给fieldA和fieldB
         }
       });
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      console.log("interval---aaa");
+      this.form.setFieldsValue({ fieldA: "hello word" });
+    }, 10000); // 10s之后重置表单数据
   }
 };
 </script>
